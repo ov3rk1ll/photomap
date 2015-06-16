@@ -239,7 +239,7 @@ angular.module('oauth2.directive', []).directive('oauth2', ['$rootScope', '$http
 			scope.signOutUrl = scope.signOutUrl || '';
 			scope.signOutRedirectUrl = scope.signOutRedirectUrl || '';
 			scope.unauthorizedAccessUrl = scope.unauthorizedAccessUrl || '';
-			scope.redirectUrl = scope.redirectUrl || window.locaation.protocol + '//' + window.location.host + window.location.pathname;
+			scope.redirectUrl = scope.redirectUrl || window.location.protocol + '//' + window.location.host + window.location.pathname;
 
 			compile();
 
