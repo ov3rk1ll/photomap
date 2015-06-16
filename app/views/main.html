@@ -1,0 +1,18 @@
+<div class="container">
+	<h1>Photomap <small>Put your geotagged photos on a map</small></h1>
+	<p class="lead">Select a service to load photos from</p>
+	<div class="col-sm-6 col-md-offset-3">
+		<oauth2 
+		  ng-repeat="(key, service) in services"
+		  state="{{key}}"
+          authorization-url="{{service.url}}"
+          client-id="{{service.client}}"
+          response-type="token"
+          scope="{{service.scope}}"
+          template='<a ng-click="signIn()" style="margin-top: 5px;" class="btn btn-block btn-social btn-{{key}} btn-lg"><i class="fa fa-{{key}}"></i> Show photos from {{key}}</a>'>
+        </oauth2>
+	</div>
+	<div class="clearfix"></div>
+	<p class="lead">or drop you local fotos here</p>
+	<div class="col-sm-8 col-md-offset-2" dropzone></div>
+</div>
