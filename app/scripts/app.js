@@ -29,6 +29,10 @@ angular
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
+      .when('/about', {
+        templateUrl: 'views/about.html',
+        controller: 'AboutCtrl'
+      })
       .when('/:access_token?', {
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
@@ -36,10 +40,6 @@ angular
       .when('/album/:provider', {
         templateUrl: 'views/album.html',
         controller: 'AlbumCtrl'
-      })
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl'
       })
       .when('/map/:provider/:albumid', {
         templateUrl: 'views/map.html',
