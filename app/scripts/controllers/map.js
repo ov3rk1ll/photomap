@@ -11,7 +11,7 @@ angular.module('photomapApp')
   .controller('MapCtrl', function ($scope, AccessToken, $http, uiGmapGoogleMapApi, $rootScope, $routeParams, ApiWrapper, localFiles) {
     $scope.photos = [];
     $scope.progress = 100;
-    $scope.map = { fit: true, center: { latitude: 59, longitude: 18 }, zoom: 8,
+    $scope.map = { fit: true, center: { latitude: 24, longitude: 70 }, zoom: 3,
         options: {panControl: false, rotateControl: false, scaleControl: false, streetViewControl: false, zoomControl: false},
         events: {
             tilesloaded: function (map) {

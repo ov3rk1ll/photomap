@@ -96,37 +96,41 @@ angular.module('photomapApp')
       },
       getPhotos: function(token, albumId){
          return $q(function(resolve, reject) {
-          var param = albumId.split('-');
-          $http.jsonp('https://graph.facebook.com/v2.3/' + albumId + '/photos',
+          var album = {
+                'title': '',
+                'photos': []
+          };          
+          $http.jsonp('https://graph.facebook.com/v2.3/' + albumId,
             { params: {'with': 'location','callback': 'JSON_CALLBACK', 'alt': 'json-in-script', 'access_token': token } }
           ).success(function(data){
-            var album = {
-                'title': 'TODO',
-                'photos': []
-            };               
-            for(var e in data.data){
-              var entry = data.data[e];
-              if(entry.place){
-                try{
-                  album.photos.push({
-                      'id': entry.id,
-                      'latitude': parseFloat(entry.place.location.latitude),
-                      'longitude': parseFloat(entry.place.location.longitude),
-                      'icon': 'images/maps/dot_red.png',
-                      'content':{
-                          'title': entry.name,
-                          'time': entry.created_time,
-                          'image': entry.picture,
-                          'thumbnail': entry.picture,
-                      }
-                  });
-                }catch(ex){
-                  console.log(entry['gphoto$id']['$t'] + ' failed with ' + ex);
-                }
-             }              
-            }
-            resolve(album);
-          }); 
+            album.title = data.name;
+            $http.jsonp('https://graph.facebook.com/v2.3/' + albumId + '/photos',
+              { params: {'with': 'location','callback': 'JSON_CALLBACK', 'alt': 'json-in-script', 'access_token': token } }
+            ).success(function(data){                   
+              for(var e in data.data){
+                var entry = data.data[e];
+                if(entry.place){
+                  try{
+                    album.photos.push({
+                        'id': entry.id,
+                        'latitude': parseFloat(entry.place.location.latitude),
+                        'longitude': parseFloat(entry.place.location.longitude),
+                        'icon': 'images/maps/dot_red.png',
+                        'content':{
+                            'title': entry.name,
+                            'time': entry.created_time,
+                            'image': entry.picture,
+                            'thumbnail': entry.picture,
+                        }
+                    });
+                  }catch(ex){
+                    console.log(entry['gphoto$id']['$t'] + ' failed with ' + ex);
+                  }
+               }              
+              }
+              resolve(album);
+            }); 
+          });          
          });
       }
     };
