@@ -12,7 +12,7 @@ angular.module('photomapApp')
     $scope.photos = [];
     $scope.progress = 100;
     $scope.map = { fit: true, center: { latitude: 24, longitude: 70 }, zoom: 3,
-        options: {panControl: false, rotateControl: false, scaleControl: false, streetViewControl: false, zoomControl: false},
+        options: { panControl: false, rotateControl: false, scaleControl: false, streetViewControl: false, zoomControl: false },
         events: {
             tilesloaded: function (map) {
                 $scope.$apply(function () {
@@ -87,6 +87,11 @@ angular.module('photomapApp')
     }
 
     uiGmapGoogleMapApi.then(function(maps) {     
+        $scope.map.options.mapTypeControlOptions = {
+            mapTypeIds: [google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.HYBRID, google.maps.MapTypeId.TERRAIN],
+            position: google.maps.ControlPosition.RIGHT_BOTTOM,
+            style: google.maps.MapTypeControlStyle.DEFAULT
+        };
         var param = $routeParams.albumid.split('-');
         if($routeParams.provider == "local"){
             $rootScope.photos = {
@@ -122,7 +127,7 @@ angular.module('photomapApp')
         $scope.windowOptions.show = true;
         $scope.windowOptions.coords = {'latitude': model.latitude, 'longitude': model.longitude};
         $scope.windowOptions.content = model.content;
-        $scope.map.zoom = 16;
+        //$scope.map.zoom = 16;
         $scope.map.center = $scope.windowOptions.coords;
     };
 

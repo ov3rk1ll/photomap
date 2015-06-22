@@ -53,7 +53,6 @@ angular
     $rootScope.getMenuClass = function(path, match) {
       match = (typeof match === 'undefined') ? false : match;
       var compare = match ? $location.path() : $location.path().substr(0, path.length);
-      console.log(compare + '?=' + path);
       if (compare === path) {
         return 'active';
       } else {
