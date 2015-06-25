@@ -211,10 +211,10 @@ angular.module('oauth2.directive', []).directive('oauth2', ['$rootScope', '$http
 		function compile() {
 			var tpl = '<a class="{{buttonClass}}" style="margin-top:15px" href="#" ng-click="signIn()"><i class="fa fa-{{state}}"></i> {{signInText}}</a>';
 			if (scope.template) {
-				//$http.get(scope.template, { cache: $templateCache }).success(function(html) {
-		        element.html(scope.template);
-		        $compile(element.contents())(scope);
-		      //});
+				$http.get(scope.template, { cache: $templateCache }).success(function(html) {
+			        element.html(html);
+			    	$compile(element.contents())(scope);
+			    });
 			} else {
 				element.html(tpl);
 				$compile(element.contents())(scope);
