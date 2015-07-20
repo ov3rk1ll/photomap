@@ -14,7 +14,7 @@ angular.module('photomapApp')
 	$rootScope.photos = null;
 
     $scope.services = ApiWrapper.list();
-    // style="background-image:url('http://maps.googleapis.com/maps/api/staticmap?center=Salzburg,+Austria&zoom=9&scale=2&size=640x640&maptype=roadmap&format=png&visual_refresh=true&style=saturation:0|lightness:70'); background-size: cover; background-position: 50% 50%;"
+    // style="background-image:url('http://maps.googleapis.com/maps/api/staticmap?center=Salzburg,+Austria&zoom=9&scale=2&size=640x640&maptype=roadmap&format=png&visual_refresh=true&style=saturation:-20|lightness:90'); background-size: cover; background-position: 50% 50%;"
     var token = AccessToken.set();
     if(token && token.state && $routeParams.access_token){
     	$location.url('/album/' + token.state);
