@@ -30,60 +30,56 @@ angular.module('photomapApp')
             }
         }
     };
-
-    var dataURItoBlob = function(dataURI) {
-      var byteString = atob(dataURI.split(',')[1]);
-
-      var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
-
-      var ab = new ArrayBuffer(byteString.length);
-      var ia = new Uint8Array(ab);
-      for (var i = 0; i < byteString.length; i++) {
-          ia[i] = byteString.charCodeAt(i);
-      }
-
-      return new Blob([ab], {type: mimeString});
-    };
-
+	
     $scope.photosDone = 0;
 
     $scope.readPhoto = function(f){
         var reader = new FileReader();
         reader.onloadend = (function(theFile) {
             return function(e) {
-              var jpeg = new JpegMeta.JpegFile(atob(e.target.result.replace(/^.*?,/,'')), theFile)
-              var img = new Image;
-              img.src = e.target.result;
-              if(jpeg.gps.GPSDateStamp.value != '0000:00:00'){
-                var blob = dataURItoBlob(e.target.result);
-                var dataUrl = window.URL.createObjectURL(blob);
-                $scope.photos.push({
-                  'id': jpeg.filename.name,
-                  'latitude': parseFloat(jpeg.gps.latitude.value),
-                  'longitude': parseFloat(jpeg.gps.longitude.value),
-                  'icon': 'images/maps/dot_red.png',
-                  'content':{
-                      'title': jpeg.filename.name,
-                      'time': jpeg.filename.lastModified,
-                      'image': dataUrl,
-                      'thumbnail': dataUrl,
-                  }
-                });
-                $rootScope.photos.count = $scope.photos.length;
-              }
+				var exif = new ExifReader();
+				// Parse the Exif tags
+				exif.load(e.target.result);
+				// The MakerNote tag can be really large. Remove it to lower memory usage.
+				exif.deleteTag('MakerNote');
+								
+				if(exif.getTagDescription('GPSLatitude') && exif.getTagDescription('GPSTimeStamp') != '00:00:00'){
+					//var blob = dataURItoBlob(e.target.result);
+					var dataUrl = window.URL.createObjectURL(theFile);
+					var latitude = parseFloat(exif.getTagDescription('GPSLatitude'));
+					if(exif.getTagDescription('GPSLatitudeRef') == 'South latitude'){ latitude = latitude * -1.0; }
+					
+					var longitude = parseFloat(exif.getTagDescription('GPSLongitude'));
+					if(exif.getTagDescription('GPSLongitudeRef') == 'West longitude'){ longitude = longitude * -1.0; }
+										
+					$scope.photos.push({
+					  'id': theFile.name,
+					  'latitude': latitude,
+					  'longitude': longitude,
+					  'icon': 'images/maps/dot_red.png',
+					  'content':{
+						  'title': theFile.name,
+						  'time': exif.getTagDescription('DateTime'),
+						  'image': dataUrl,
+						  'thumbnail': dataUrl,
+					  }
+					});
+					$rootScope.photos.count = $scope.photos.length;
+				}
               $scope.photosDone++;
               if($scope.photosDone == localFiles.files.length){ // Done with loading
                 $rootScope.photos.title = 'Local';
                 $scope.progress = 100;
+				$scope.$apply();
               } else {
                 $rootScope.photos.title = 'Local ' + $scope.photosDone + "/" + localFiles.files.length;
                 $scope.progress = parseInt(($scope.photosDone / localFiles.files.length) * 100);
               }
               console.log($scope.progress);
-              $scope.$apply();
+              
             };
           })(f);
-        reader.readAsDataURL(f);
+		reader.readAsArrayBuffer(f.slice(0, 128 * 1024));
     }
 
     uiGmapGoogleMapApi.then(function(maps) {     

@@ -33,6 +33,7 @@ module.exports = function(config) {
       'bower_components/angular-animate/angular-animate.js',
       'bower_components/angular-busy/dist/angular-busy.js',
       'bower_components/vegas/dist/vegas.min.js',
+      'bower_components/exifreader/js/ExifReader.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       "app/scripts/**/*.js",
